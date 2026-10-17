@@ -1,0 +1,1 @@
+{ "name": "grille-atelier", "private": true, "license": "MIT", "scripts": { "test": "node tests/geometry.test.js", "test:ui": "node tests/ui.test.js" } }
