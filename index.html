@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="fr" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Grille Atelier — grilles et gabarits de dessin à imprimer</title>
+  <meta name="description" content="Générateur gratuit de grilles de dessin dans le navigateur : quadrillage, points, isométrique, hexagones, perspective 1/2/3 points, mandala, planches de BD, storyboard, guides de calligraphie latine, arabe et tifinagh. Export SVG vectoriel en mm, PNG 150–600 dpi, impression.">
+  <meta name="theme-color" content="#16202a">
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/style.css">
+  <style id="pageRule">@page { size: 210mm 297mm; margin: 0; }</style>
+</head>
+<body>
+  <a class="skip" href="#stage" data-i18n="skip"></a>
+  <!-- ===================================================== header -->
+  <header class="top">
+    <div class="brand">
+      <img src="icons/icon.svg" alt="" width="42" height="42">
+      <div>
+        <h1>Grille Atelier <span class="tf" lang="kab-Tfng" aria-hidden="true">ⴰⵥⴻⵟⵟⴰ</span></h1>
+        <p data-i18n="tagline"></p>
+      </div>
+    </div>
+    <div class="top-actions">
+      <label class="field inline"><span class="sr" data-i18n="language"></span>
+        <select id="lang" aria-label="Langue / Language / Tutlayt">
+          <option value="fr">Français</option><option value="en">English</option><option value="kab">Taqbaylit</option>
+        </select>
+      </label>
+      <label class="check" id="tfngWrap" hidden><input type="checkbox" id="tfng"> <span data-i18n="tifinagh"></span> ⵣ</label>
+      <button class="btn icon" id="themeBtn" type="button" data-i18n-attr="aria-label:uiTheme;title:uiTheme">◐</button>
+      <button class="btn icon" id="helpBtn" type="button" data-i18n-attr="aria-label:help;title:help">?</button>
+    </div>
+  </header>
+
+  <main class="layout">
+    <!-- ===================================================== left column: type + settings -->
+    <div class="col col-left">
+      <section class="card types" aria-labelledby="typeTitle">
+        <h2 id="typeTitle" data-i18n="gridType"></h2>
+        <div class="type-grid" id="typeGrid" role="radiogroup" aria-labelledby="typeTitle"></div>
+        <label class="field"><span data-i18n="preset"></span>
+          <select id="preset"></select>
+        </label>
+      </section>
+
+      <section class="card" aria-labelledby="gridTitle" id="gridCard">
+        <h2 id="gridTitle" data-i18n="gridSettings"></h2>
+        <!-- regular grids -->
+        <div class="grid2" data-types="square dot iso isodot dimetric triangle hex ruled">
+          <label class="field"><span><span id="cellLabel"></span> <span class="u"></span></span><input type="number" data-k="cell" data-len min="0" step="any"></label>
+          <label class="field" data-types="square dot iso isodot dimetric triangle ruled"><span id="subLabel"></span><input type="number" data-k="sub" min="1" max="20" step="1"></label>
+        </div>
+        <label class="field" data-types="dot isodot"><span data-i18n="dotR"></span><input type="number" data-k="dotR" min="0.05" max="5" step="0.05"></label>
+        <label class="check" data-types="square dot iso isodot dimetric triangle hex"><input type="checkbox" data-k="center"> <span data-i18n="center"></span></label>
+        <label class="check" data-types="iso dimetric"><input type="checkbox" data-k="isoVert"> <span data-i18n="isoVert"></span></label>
+        <div data-types="dimetric">
+          <label class="field"><span data-i18n="dimAngle"></span><input type="number" data-k="dimAngle" min="5" max="60" step="any"></label>
+          <p class="hint" data-i18n="dimHint"></p>
+        </div>
+        <div data-types="hex">
+          <label class="field"><span data-i18n="hexOrient"></span>
+            <select data-k="hexOrient"><option value="pointy" data-i18n="hexPointy"></option><option value="flat" data-i18n="hexFlat"></option></select></label>
+          <label class="check"><input type="checkbox" data-k="hexInner"> <span data-i18n="hexInner"></span></label>
+        </div>
+        <div data-types="ruled">
+          <label class="check"><input type="checkbox" data-k="rVert"> <span data-i18n="rVert"></span></label>
+          <label class="field"><span><span data-i18n="rMargin"></span> <span class="u"></span></span><input type="number" data-k="rMargin" data-len min="0" step="any"></label>
+        </div>
+        <!-- perspective -->
+        <div data-types="persp1 persp2 persp3">
+          <p class="hint" data-i18n="perspHint"></p>
+          <div class="grid2">
+            <label class="field"><span data-i18n="hz"></span><input type="number" data-k="hz" data-pct step="any"></label>
+            <label class="field"><span data-i18n="v1x"></span><input type="number" data-k="v1x" data-pct step="any"></label>
+            <label class="field" data-types="persp2 persp3"><span data-i18n="v2x"></span><input type="number" data-k="v2x" data-pct step="any"></label>
+            <label class="field" data-types="persp3"><span data-i18n="v3x"></span><input type="number" data-k="v3x" data-pct step="any"></label>
+            <label class="field" data-types="persp3"><span data-i18n="v3y"></span><input type="number" data-k="v3y" data-pct step="any"></label>
+            <label class="field"><span data-i18n="pLines"></span><input type="number" data-k="pLines" min="2" max="180" step="1"></label>
+            <label class="field" data-types="persp1 persp2"><span data-i18n="pVert"></span><input type="number" data-k="pVert" min="0" max="200" step="1"></label>
+            <label class="field" data-types="persp1"><span data-i18n="pHoriz"></span><input type="number" data-k="pHoriz" min="0" max="200" step="1"></label>
+          </div>
+          <label class="field"><span data-i18n="pSpread"></span>
+            <select data-k="pSpread"><option value="area" data-i18n="spreadArea"></option><option value="full" data-i18n="spreadFull"></option></select></label>
+          <div data-types="persp1 persp2">
+            <label class="check"><input type="checkbox" data-k="pDepth"> <span data-i18n="pDepth"></span></label>
+            <div class="grid2">
+              <label class="field"><span><span data-i18n="pTile"></span> <span class="u"></span></span><input type="number" data-k="pTile" data-len min="0" step="any"></label>
+              <label class="field" data-types="persp1"><span data-i18n="pDist"></span><input type="number" data-k="pDist" min="0.2" max="5" step="0.1"></label>
+            </div>
+          </div>
+          <label class="check"><input type="checkbox" data-k="pMarks"> <span data-i18n="pMarks"></span></label>
+        </div>
+        <!-- polar -->
+        <div data-types="polar">
+          <p class="hint" data-i18n="polarHint"></p>
+          <div class="grid2">
+            <label class="field"><span data-i18n="pcx"></span><input type="number" data-k="pcx" data-pct step="any"></label>
+            <label class="field"><span data-i18n="pcy"></span><input type="number" data-k="pcy" data-pct step="any"></label>
+            <label class="field"><span><span data-i18n="ringGap"></span> <span class="u"></span></span><input type="number" data-k="ringGap" data-len min="0" step="any"></label>
+            <label class="field"><span data-i18n="sub_polar"></span><input type="number" data-k="sub" min="1" max="20" step="1"></label>
+            <label class="field"><span data-i18n="spokes"></span><input type="number" data-k="spokes" min="1" max="360" step="1"></label>
+            <label class="field"><span data-i18n="spokeSub"></span><input type="number" data-k="spokeSub" min="1" max="12" step="1"></label>
+          </div>
+          <label class="check"><input type="checkbox" data-k="polarPoly"> <span data-i18n="polarPoly"></span></label>
+        </div>
+        <!-- comic -->
+        <div data-types="comic">
+          <label class="field"><span data-i18n="comicLayout"></span><select id="comicLayout"></select></label>
+          <label class="field"><span data-i18n="rows"></span><input type="text" data-k="rows" spellcheck="false" autocomplete="off"></label>
+          <p class="hint" data-i18n="rowsHint"></p>
+          <p class="warn" id="rowsErr" data-i18n="rowsErr" hidden></p>
+          <label class="field"><span data-i18n="heights"></span><input type="text" data-k="heights" spellcheck="false" autocomplete="off" placeholder="1, 1, 2"></label>
+          <div class="grid2">
+            <label class="field"><span><span data-i18n="gutH"></span> <span class="u"></span></span><input type="number" data-k="gutH" data-len min="0" step="any"></label>
+            <label class="field"><span><span data-i18n="gutV"></span> <span class="u"></span></span><input type="number" data-k="gutV" data-len min="0" step="any"></label>
+            <label class="field"><span><span data-i18n="panelR"></span> <span class="u"></span></span><input type="number" data-k="panelR" data-len min="0" step="any"></label>
+          </div>
+        </div>
+        <!-- storyboard -->
+        <div data-types="storyboard" class="grid2">
+          <label class="field"><span data-i18n="sbCols"></span><input type="number" data-k="sbCols" min="1" max="8" step="1"></label>
+          <label class="field"><span data-i18n="sbRows"></span><input type="number" data-k="sbRows" min="1" max="10" step="1"></label>
+          <label class="field"><span data-i18n="sbAspect"></span>
+            <select data-k="sbAspect"><option>16:9</option><option>2.39:1</option><option>1.85:1</option><option>4:3</option><option>3:2</option><option>1:1</option><option>9:16</option></select></label>
+          <label class="field"><span data-i18n="sbLines"></span><input type="number" data-k="sbLines" min="0" max="12" step="1"></label>
+          <label class="field"><span><span data-i18n="sbLineGap"></span> <span class="u"></span></span><input type="number" data-k="sbLineGap" data-len min="0" step="any"></label>
+          <label class="field"><span><span data-i18n="sbGutter"></span> <span class="u"></span></span><input type="number" data-k="sbGutter" data-len min="0" step="any"></label>
+        </div>
+        <!-- calligraphy -->
+        <div data-types="calligraphy">
+          <label class="field"><span data-i18n="cPreset"></span><select data-k="cPreset" id="cPreset"></select></label>
+          <p class="hint" data-i18n="calliHint"></p>
+          <div class="grid2">
+            <label class="field"><span data-i18n="nib"></span><input type="number" data-k="nib" min="0.2" max="20" step="0.1"></label>
+            <label class="field"><span data-i18n="xh"></span><input type="number" data-k="xh" min="0" max="20" step="0.5"></label>
+            <label class="field"><span data-i18n="ah"></span><input type="number" data-k="ah" min="0" max="30" step="0.5"></label>
+            <label class="field"><span data-i18n="ch"></span><input type="number" data-k="ch" min="0" max="30" step="0.5"></label>
+            <label class="field"><span data-i18n="dh"></span><input type="number" data-k="dh" min="0" max="20" step="0.5"></label>
+            <label class="field"><span data-i18n="lg"></span><input type="number" data-k="lg" min="0" max="30" step="0.5"></label>
+            <label class="field"><span data-i18n="slant"></span><input type="number" data-k="slant" min="30" max="90" step="1"></label>
+            <label class="field"><span><span data-i18n="slantGap"></span> <span class="u"></span></span><input type="number" data-k="slantGap" data-len min="0" step="any"></label>
+          </div>
+          <label class="check"><input type="checkbox" data-k="mid"> <span data-i18n="mid"></span></label>
+          <label class="check"><input type="checkbox" data-k="shade"> <span data-i18n="shade"></span></label>
+          <label class="check"><input type="checkbox" data-k="ladder"> <span data-i18n="ladder"></span></label>
+          <label class="check"><input type="checkbox" data-k="rtl"> <span data-i18n="rtl"></span></label>
+          <label class="check"><input type="checkbox" data-k="modules"> <span data-i18n="modules"></span></label>
+        </div>
+        <p class="hint" data-types="blank" data-i18n="blankHint"></p>
+      </section>
+
+      <section class="card" aria-labelledby="ovTitle">
+        <h2 id="ovTitle" data-i18n="overlays"></h2>
+        <div class="checks2">
+          <label class="check"><input type="checkbox" data-k="oThirds"> <span data-i18n="oThirds"></span></label>
+          <label class="check"><input type="checkbox" data-k="oPhi"> <span data-i18n="oPhi"></span></label>
+          <label class="check"><input type="checkbox" data-k="oDiag"> <span data-i18n="oDiag"></span></label>
+          <label class="check"><input type="checkbox" data-k="oCenter"> <span data-i18n="oCenter"></span></label>
+          <label class="check"><input type="checkbox" data-k="oSpiral"> <span data-i18n="oSpiral"></span></label>
+        </div>
+        <div class="row" id="spiralOpts">
+          <label class="field inline"><span data-i18n="oSpiralRot"></span>
+            <select data-k="oSpiralRot"><option value="0" data-i18n="rot0"></option><option value="1" data-i18n="rot1"></option><option value="2" data-i18n="rot2"></option><option value="3" data-i18n="rot3"></option></select></label>
+          <label class="check"><input type="checkbox" data-k="oSpiralFlip"> <span data-i18n="oSpiralFlip"></span></label>
+        </div>
+        <div class="grid3">
+          <label class="field"><span data-i18n="oCols"></span><input type="number" data-k="oCols" min="0" max="24" step="1"></label>
+          <label class="field"><span data-i18n="oRows"></span><input type="number" data-k="oRows" min="0" max="24" step="1"></label>
+          <label class="field"><span><span data-i18n="oGut"></span> <span class="u"></span></span><input type="number" data-k="oGut" data-len min="0" step="any"></label>
+        </div>
+      </section>
+
+      <section class="card" aria-labelledby="pageTitle">
+        <h2 id="pageTitle" data-i18n="page"></h2>
+        <div class="grid2">
+          <label class="field"><span data-i18n="format"></span>
+            <select data-k="format">
+              <option value="A3">A3</option><option value="A4">A4</option><option value="A5">A5</option><option value="A6">A6</option>
+              <option value="B5" data-i18n="f_B5"></option><option value="letter">US Letter</option><option value="legal">US Legal</option><option value="tabloid">Tabloid</option>
+              <option value="comicUS" data-i18n="f_comicUS"></option><option value="square" data-i18n="f_square"></option><option value="r169" data-i18n="f_r169"></option>
+              <option value="custom" data-i18n="f_custom"></option>
+            </select></label>
+          <label class="field"><span data-i18n="unit"></span>
+            <select data-k="unit"><option value="mm">mm</option><option value="in">in</option><option value="px">px (96/in)</option></select></label>
+        </div>
+        <div class="seg" role="radiogroup" data-i18n-attr="aria-label:orient" id="orientSeg">
+          <button type="button" role="radio" data-orient="portrait" data-i18n="portrait"></button>
+          <button type="button" role="radio" data-orient="landscape" data-i18n="landscape"></button>
+        </div>
+        <div class="grid2 mt">
+          <label class="field"><span><span data-i18n="width"></span> <span class="u"></span></span><input type="number" id="pageW" min="0" step="any"></label>
+          <label class="field"><span><span data-i18n="height"></span> <span class="u"></span></span><input type="number" id="pageH" min="0" step="any"></label>
+        </div>
+        <fieldset class="box">
+          <legend><span data-i18n="margins"></span> <span class="u"></span></legend>
+          <div class="grid4">
+            <label class="field"><span data-i18n="mt"></span><input type="number" data-k="mt" data-len min="0" step="any"></label>
+            <label class="field"><span data-i18n="mr"></span><input type="number" data-k="mr" data-len min="0" step="any"></label>
+            <label class="field"><span data-i18n="mb"></span><input type="number" data-k="mb" data-len min="0" step="any"></label>
+            <label class="field"><span data-i18n="ml"></span><input type="number" data-k="ml" data-len min="0" step="any"></label>
+          </div>
+        </fieldset>
+        <label class="field"><span><span data-i18n="bleed"></span> <span class="u"></span></span><input type="number" data-k="bleed" data-len min="0" step="any"></label>
+        <label class="check"><input type="checkbox" data-k="gridBleed"> <span data-i18n="gridBleed"></span></label>
+        <label class="check"><input type="checkbox" data-k="cropMarks"> <span data-i18n="cropMarks"></span></label>
+        <label class="check"><input type="checkbox" data-k="frame"> <span data-i18n="frame"></span></label>
+      </section>
+
+      <section class="card" aria-labelledby="styleTitle">
+        <h2 id="styleTitle" data-i18n="style"></h2>
+        <div class="grid2">
+          <label class="field"><span data-i18n="theme"></span><select data-k="theme" id="themeSel"></select></label>
+          <label class="field"><span data-i18n="bg"></span><input type="color" data-k="bg"></label>
+        </div>
+        <label class="check"><input type="checkbox" data-k="transparent"> <span data-i18n="transparent"></span></label>
+        <div class="styles">
+          <fieldset class="box"><legend data-i18n="major"></legend>
+            <div class="grid3">
+              <label class="field"><span data-i18n="color"></span><input type="color" data-k="majC"></label>
+              <label class="field"><span data-i18n="opacity"></span><input type="range" data-k="majO" min="0" max="1" step="0.05"></label>
+              <label class="field"><span data-i18n="thickness"></span><input type="number" data-k="majW" min="0.01" max="5" step="0.05"></label>
+            </div></fieldset>
+          <fieldset class="box"><legend data-i18n="minor"></legend>
+            <div class="grid3">
+              <label class="field"><span data-i18n="color"></span><input type="color" data-k="minC"></label>
+              <label class="field"><span data-i18n="opacity"></span><input type="range" data-k="minO" min="0" max="1" step="0.05"></label>
+              <label class="field"><span data-i18n="thickness"></span><input type="number" data-k="minW" min="0.01" max="5" step="0.05"></label>
+            </div></fieldset>
+          <fieldset class="box"><legend data-i18n="accent"></legend>
+            <div class="grid3">
+              <label class="field"><span data-i18n="color"></span><input type="color" data-k="accC"></label>
+              <label class="field"><span data-i18n="opacity"></span><input type="range" data-k="accO" min="0" max="1" step="0.05"></label>
+              <label class="field"><span data-i18n="thickness"></span><input type="number" data-k="accW" min="0.01" max="5" step="0.05"></label>
+            </div></fieldset>
+        </div>
+        <label class="field"><span data-i18n="dash"></span><input type="number" data-k="dash" min="0.2" max="20" step="0.1"></label>
+      </section>
+    </div>
+
+    <!-- ===================================================== right column: preview + export -->
+    <div class="col col-right">
+      <section class="card preview" aria-labelledby="pvTitle">
+        <div class="pv-head">
+          <h2 id="pvTitle" data-i18n="preview"></h2>
+          <p class="muted small" id="info" aria-live="polite"></p>
+          <div class="zoom">
+            <button class="btn icon" type="button" id="zoomOut" data-i18n-attr="aria-label:zoomOut;title:zoomOut">−</button>
+            <output id="zoomVal">100 %</output>
+            <button class="btn icon" type="button" id="zoomIn" data-i18n-attr="aria-label:zoomIn;title:zoomIn">+</button>
+            <button class="btn small" type="button" id="zoomFit" data-i18n="zoomFit"></button>
+          </div>
+        </div>
+        <p class="warn" id="warn" role="status" hidden></p>
+        <div class="stage" id="stage" tabindex="0" data-i18n-attr="aria-label:preview"></div>
+      </section>
+
+      <section class="card exp" aria-labelledby="expTitle">
+        <h2 id="expTitle" data-i18n="export"></h2>
+        <div class="row">
+          <button class="btn primary" type="button" id="svgBtn">⬇ <span data-i18n="svg"></span></button>
+          <label class="field inline"><span data-i18n="dpi"></span>
+            <select data-k="dpi"><option value="72">72 dpi</option><option value="96">96 dpi</option><option value="150">150 dpi</option><option value="300">300 dpi</option><option value="600">600 dpi</option></select></label>
+          <button class="btn primary" type="button" id="pngBtn">⬇ <span data-i18n="png"></span></button>
+          <span class="muted small" id="pngSize"></span>
+        </div>
+        <div class="row">
+          <button class="btn" type="button" id="printBtn">🖨 <span data-i18n="print"></span></button>
+          <button class="btn" type="button" id="jsonBtn">⬇ <span data-i18n="saveJson"></span></button>
+          <label class="btn file">📂 <span data-i18n="openFile"></span><input type="file" id="fileIn" accept=".json,.svg,application/json,image/svg+xml" class="sr"></label>
+          <button class="btn" type="button" id="linkBtn">🔗 <span data-i18n="copyLink"></span></button>
+          <button class="btn danger" type="button" id="resetBtn" data-i18n="reset"></button>
+        </div>
+        <p class="hint" data-i18n="printHint"></p>
+        <p class="status" id="status" role="status" aria-live="polite"></p>
+      </section>
+    </div>
+  </main>
+
+  <footer class="foot muted small"><span data-i18n="footer"></span> · <a href="https://github.com/salimadour31-boop/grille-atelier" data-i18n="source"></a></footer>
+
+  <div id="printArea" aria-hidden="true"></div>
+
+  <dialog id="helpDlg" aria-labelledby="helpTitle">
+    <h2 id="helpTitle" data-i18n="helpTitle"></h2>
+    <div data-i18n-html="helpBody"></div>
+    <h3 data-i18n="shortcuts"></h3>
+    <ul class="kbd-list">
+      <li><kbd>+</kbd> <kbd>−</kbd> <kbd>0</kbd> <span data-i18n="sc_zoom"></span></li>
+      <li><kbd>←</kbd> <kbd>↑</kbd> <kbd>→</kbd> <kbd>↓</kbd> <span data-i18n="sc_move"></span></li>
+      <li><kbd>Ctrl</kbd>+<kbd>S</kbd> <span data-i18n="sc_svg"></span></li>
+      <li><kbd>Ctrl</kbd>+<kbd>P</kbd> <span data-i18n="sc_print"></span></li>
+    </ul>
+    <form method="dialog"><button class="btn primary" data-i18n="close"></button></form>
+  </dialog>
+
+  <script src="js/geometry.js"></script>
+  <script src="js/settings.js"></script>
+  <script src="js/export.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
